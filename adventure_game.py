@@ -2,6 +2,7 @@ import random
 
 # Create a MySQL database connection here
 
+
 class Player:
     
     def __init__(self, name, max_hp, damage, gold):
@@ -10,15 +11,16 @@ class Player:
         self.current_hp = max_hp
         self.damage = damage
         self.gold = gold
+        self.message = ""
         self.save()
 
     def attack(self, enemy):
         damage = random.randint(1, self.damage)
         enemy.current_hp -= damage
-        print(f"{self.name} deals {damage} damage to {enemy.name}!")
+        self.message = f"{self.name} deals {damage} damage to {enemy.name}!"
         if enemy.current_hp <= 0:
             self.gold += enemy.gold
-            print(f"{self.name} has defeated {enemy.name} and gained {enemy.gold} gold!")
+            self.message += "\n" + f"{self.name} has defeated {enemy.name} and gained {enemy.gold} gold!"
             return True
         return False
 
@@ -34,7 +36,7 @@ class Warrior(Player):
 
 class Wizard(Player):
     def __init__(self, name):
-        super().__init__(name, 50, 20, 0)
+        super().__init__(name, 20, 20, 0)
 
 
 class Obstacle:
@@ -85,12 +87,13 @@ class Enemy:
         self.current_hp = max_hp
         self.damage = damage
         self.gold = gold
+        self.message = ""
         self.save()
 
     def attack(self, player):
-        damage = random.randint(1, self.damage)
+        damage = self.damage
         player.current_hp -= damage
-        print(f"The {self.name} deals {damage} damage to {player.name}!")
+        self.message = f"The {self.name} deals {damage} damage to {player.name}!"
 
     def save(self):
         # Save the enemy's data to the database
@@ -99,7 +102,7 @@ class Enemy:
 
 class Goblin(Enemy):
     def __init__(self):
-        super().__init__("Goblin", 20, 5, 10)
+        super().__init__("Goblin", 20, 50, 10)
 
 
 class Orc(Enemy):
@@ -135,6 +138,8 @@ class World:
 
    
     def move_player(self, direction):
+        output = """Game start!"""
+
         x, y = self.player_position
         if direction == "w" or direction == "up":
             y -= 1
@@ -151,35 +156,37 @@ class World:
 
         cell = self.grid[y][x]
         if cell is None:
-            print("You move into the empty space.")
+            output = ("You move into the empty space.")
         elif isinstance(cell, Obstacle):
             damage = cell.damage
-            print(f"You hit a {cell.name} and take {damage} damage!")
+            output = (f"You hit a {cell.name} and take {damage} damage!")
             self.player.current_hp -= damage
             if self.player.current_hp <= 0:
-                print("You have died.")
+                output = ("You have died.")
                 exit()
         elif isinstance(cell, Enemy):
             enemy_defeated = self.player.attack(cell)
+            output = (self.player.message)
             if enemy_defeated:
                 self.grid[y][x] = None
         elif isinstance(cell, Health):
             self.player.current_hp += cell.amount
-            print(f"You found a health potion and healed for {cell.amount} HP!")
+            output = (f"You found a health potion and healed for {cell.amount} HP!")
             self.grid[y][x] = None
         elif isinstance(cell, Armour):
             self.player.max_hp += cell.amount
             self.player.current_hp += cell.amount
-            print(f"You found a piece of armour and increased your maximum HP by {cell.amount}!")
+            output = (f"You found a piece of armour and increased your maximum HP by {cell.amount}!")
             self.grid[y][x] = None
         elif isinstance(cell, Exit):
-            print(cell.message)
+            output = (cell.message)
             exit()
 
         self.grid[self.player_position[1]][self.player_position[0]] = None
         self.player_position = (x, y)
         self.grid[y][x] = self.player
         self.print_map()
+        print(output)
 
 
 def main():
