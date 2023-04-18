@@ -1,8 +1,8 @@
 """
-    MAIN MODULE
+TODO: DOCSTRING
 """
 import random
-from Player import Wizard,Warrior
+from player import Wizard,Warrior
 from enemy import Goblin,Orc
 from obstacles import Trap,Wall
 from world import World, Exit
@@ -13,8 +13,9 @@ from world import World, Exit
 
 def main():
     """
-    MAIN MODULE
-    """  
+    TODO: DOCSTRING
+    """
+
     world = None
     restore = input("Do you want to restore your previous game? (y/n): ")
     world = World(10)

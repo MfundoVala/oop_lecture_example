@@ -1,15 +1,26 @@
-from database_manager import DatabaseManager
+"""
+TODO: 
+This module contains the World class, which is used 
+to create a world for the player to explore.
+"""
 import random
-from Player import *
-from enemy import *
-from obstacles import *
+from database_manager import DatabaseManager
+from player import Player
+from obstacles import Obstacle, Wall, Trap
+from enemy import Enemy, Goblin, Orc
 
 class Exit:
+    """
+    TODO: DOCSTRING
+    """
     def __init__(self, message):
         self.message = message
 
 
 class World:
+    """
+    TODO: DOCSTRING
+    """
     size = 0
     player = None
     db = DatabaseManager()
@@ -21,6 +32,9 @@ class World:
 
     # print the map from the 2d array grid values
     def print_map(self):
+        """
+        TODO: DOCSTRING
+        """
         for row in self.grid:
             for cell in row:
                 if cell is None:
@@ -39,11 +53,17 @@ class World:
             self.store_player_data()
 
     def store_player_data(self):
+        """
+        TODO: DOCSTRING
+        """
         self.db.save_player_data("Player", self.player_position, self.player.name, self.player.max_health,
                                   self.player.current_health, self.player.damage)
 
     def store_grid_to_file(self):
-        with open("grid_save.txt", "w") as file:
+        """
+        TODO: DOCSTRING
+        """
+        with open("grid_save.txt", "w", encoding="utf-8") as file:
             for row in self.grid:
                 for cell in row:
                     if cell is None:
@@ -59,17 +79,20 @@ class World:
                 file.write("\n")
 
     def get_stored_world(self):
-        with open("grid_save.txt", "r") as file:
+        """
+        TODO: DOCSTRING
+        """
+        with open("grid_save.txt", "r", encoding="utf-8") as file:
             data = file.readlines()
             for x, line in enumerate(data):
-                for y in range(len(line)):
-                    if line[y] == "E":
+                for y, value in enumerate(line):
+                    if value == "E":
                         self.grid[x][y] = random.choice([Goblin(), Orc()])
-                    elif line[y] == "O":
+                    elif value == "O":
                         self.grid[x][y] = random.choice([Wall(), Trap()])
-                    elif line[y] == "X":
+                    elif value == "X":
                         self.grid[x][y] = Exit("Goodbye")
-                    elif line[y] == "P":
+                    elif value == "P":
                         player_data = self.db.retrieve_player_data()
                         self.grid[x][y] = self.player
                         self.player_position = (y, x)
