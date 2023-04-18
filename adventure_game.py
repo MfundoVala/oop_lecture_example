@@ -1,13 +1,20 @@
+"""
+    MAIN MODULE
+"""
 import random
-from Player import *
-from enemy import *
-from obstacles import *
-from world import *
+from Player import Wizard,Warrior
+from enemy import Goblin,Orc
+from obstacles import Trap,Wall
+from world import World, Exit
+
 
 
 # Create a MySQL database connection here
 
 def main():
+    """
+    MAIN MODULE
+    """  
     world = None
     restore = input("Do you want to restore your previous game? (y/n): ")
     world = World(10)
@@ -16,7 +23,6 @@ def main():
         world.player = player
         world.get_stored_world()
         # Restore the player's data from the database
-        pass
     else:
         player_type = input('''Choose your player type: 
         1. Warrior
@@ -30,7 +36,6 @@ def main():
             player = Wizard(player_name)
         else:
             print("Invalid player type.")
-            exit()
 
         def random_position():
             return random.randint(1, 9)
@@ -42,7 +47,8 @@ def main():
         world.grid[random_position()][random_position()] = Trap()
         world.grid[random_position()][random_position()] = Goblin()
         world.grid[random_position()][random_position()] = Orc()
-        world.grid[random_position()][random_position()] = Exit("Congratulations! You have found the exit and beaten the game!")
+        world.grid[random_position()][random_position()] = Exit("Congratulations! You have found"
+                                                                 " the exit and beaten the game!")
 
     world.print_map()
 
