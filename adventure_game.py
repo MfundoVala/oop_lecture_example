@@ -3,53 +3,46 @@ import random
 # Create a MySQL database connection here
 
 
+# create Player class
 class Player:
     
-    def __init__(self, name, max_hp, damage, gold):
+    def __init__(self, name, max_health, damage):
         self.name = name
-        self.max_hp = max_hp
-        self.current_hp = max_hp
+        self.max_health = max_health
+        self.current_health = max_health
         self.damage = damage
-        self.gold = gold
         self.message = ""
-        self.save()
 
     def attack(self, enemy):
-        damage = random.randint(1, self.damage)
-        enemy.current_hp -= damage
+        damage = self.damage
+        enemy.current_health -= damage
         self.message = f"{self.name} deals {damage} damage to {enemy.name}!"
-        if enemy.current_hp <= 0:
-            self.gold += enemy.gold
-            self.message += "\n" + f"{self.name} has defeated {enemy.name} and gained {enemy.gold} gold!"
+        if enemy.current_health <= 0:
+            self.message += "\n" + f"{self.name} has defeated {enemy.name}!"
             return True
         return False
 
-    def save(self):
-        # Save the player's data to the database
-        pass
 
-
+# create a class for each type of Player
 class Warrior(Player):
     def __init__(self, name):
-        super().__init__(name, 100, 10, 0)
+        super().__init__(name, 100, 10)
 
 
 class Wizard(Player):
     def __init__(self, name):
-        super().__init__(name, 20, 20, 0)
+        super().__init__(name, 20, 20)
 
 
+
+
+# Create Obstacle class
 class Obstacle:
     def __init__(self, name, damage):
         self.name = name
         self.damage = damage
-        self.save()
 
-    def save(self):
-        # Save the obstacle's data to the database
-        pass
-
-
+# create a class for each type of Obstacle
 class Wall(Obstacle):
     def __init__(self):
         super().__init__("Wall", 10)
@@ -60,46 +53,22 @@ class Trap(Obstacle):
         super().__init__("Trap", 20)
 
 
-class Health:
-    def __init__(self, amount):
-        self.amount = amount
-        self.save()
 
-    def save(self):
-        # Save the health item's data to the database
-        pass
-
-
-class Armour:
-    def __init__(self, amount):
-        self.amount = amount
-        self.save()
-
-    def save(self):
-        # Save the armour item's data to the database
-        pass
-
-
+# create ENEMY class
 class Enemy:
-    def __init__(self, name, max_hp, damage, gold):
+    def __init__(self, name, max_health, damage, gold):
         self.name = name
-        self.max_hp = max_hp
-        self.current_hp = max_hp
+        self.max_health = max_health
+        self.current_health = max_health
         self.damage = damage
-        self.gold = gold
         self.message = ""
-        self.save()
 
     def attack(self, player):
         damage = self.damage
-        player.current_hp -= damage
+        player.current_health -= damage
         self.message = f"The {self.name} deals {damage} damage to {player.name}!"
 
-    def save(self):
-        # Save the enemy's data to the database
-        pass
-
-
+# create a class for each type of Enemy
 class Goblin(Enemy):
     def __init__(self):
         super().__init__("Goblin", 20, 50, 10)
@@ -116,11 +85,15 @@ class Exit:
 
 
 class World:
+    size = 0
+
     def __init__(self, size):
         self.size = size
-        self.grid = [[None for _ in range(size)] for _ in range(size)]
+        self.grid = [ [ None for _ in range(size) ] for _ in range(size) ]
         self.player_position = (0, 0)
 
+
+    # print the map from the 2d array grid values
     def print_map(self):
         for row in self.grid:
             for cell in row:
@@ -155,13 +128,15 @@ class World:
             return
 
         cell = self.grid[y][x]
+        
         if cell is None:
             output = ("You move into the empty space.")
+
         elif isinstance(cell, Obstacle):
             damage = cell.damage
             output = (f"You hit a {cell.name} and take {damage} damage!")
-            self.player.current_hp -= damage
-            if self.player.current_hp <= 0:
+            self.player.current_health -= damage
+            if self.player.current_health <= 0:
                 output = ("You have died.")
                 exit()
         elif isinstance(cell, Enemy):
@@ -169,24 +144,22 @@ class World:
             output = (self.player.message)
             if enemy_defeated:
                 self.grid[y][x] = None
-        elif isinstance(cell, Health):
-            self.player.current_hp += cell.amount
-            output = (f"You found a health potion and healed for {cell.amount} HP!")
-            self.grid[y][x] = None
-        elif isinstance(cell, Armour):
-            self.player.max_hp += cell.amount
-            self.player.current_hp += cell.amount
-            output = (f"You found a piece of armour and increased your maximum HP by {cell.amount}!")
-            self.grid[y][x] = None
         elif isinstance(cell, Exit):
-            output = (cell.message)
+            print(cell.message)
             exit()
 
         self.grid[self.player_position[1]][self.player_position[0]] = None
         self.player_position = (x, y)
         self.grid[y][x] = self.player
+
         self.print_map()
+
         print(output)
+
+    def save(self):
+        # save
+    
+        pass
 
 
 def main():
@@ -210,16 +183,17 @@ def main():
             print("Invalid player type.")
             exit()
 
+        def random_position():
+            return random.randint(1, 9)
+
         world = World(10)
         world.player = player
         world.grid[0][0] = player
-        world.grid[4][4] = Wall()
-        world.grid[3][6] = Trap()
-        world.grid[5][5] = Goblin()
-        world.grid[7][7] = Orc()
-        world.grid[8][8] = Health(20)
-        world.grid[2][2] = Armour(10)
-        world.grid[9][9] = Exit("Congratulations! You have found the exit and beaten the game!")
+        world.grid[random_position()][random_position()] = Wall()
+        world.grid[random_position()][random_position()] = Trap()
+        world.grid[random_position()][random_position()] = Goblin()
+        world.grid[random_position()][random_position()] = Orc()
+        world.grid[random_position()][random_position()] = Exit("Congratulations! You have found the exit and beaten the game!")
 
     world.print_map()
 
