@@ -1,9 +1,13 @@
 """
-TODO: Add a description of this file
+Enemy module containing Enemy class and subclasses for creation of Enemy
+objects.
 """
+
+
 class Enemy:
     """
-    TODO: Add a description of this class
+    Creates a enemy object with the necessary attributes and methods for
+    enemy interaction.
     """
     def __init__(self, name, max_health, damage):
         self.name = name
@@ -11,32 +15,12 @@ class Enemy:
         self.current_health = max_health
         self.damage = damage
         self.message = ""
-        self.type = "Enemy"
 
     def attack(self, player):
         """
-        TODO: Add a description of this method
+        Applies a damage value to player's health after a collision
+        with an enemy object.
         """
         damage = self.damage
         player.current_health -= damage
         self.message = f"The {self.name} deals {damage} damage to {player.name}!"
-
-
-# create a class for each type of Enemy 
-# TODO: POSSIBLY REMOVE THIS CLASS AND ADD THE ENEMIES TO THE ENEMY CLASS
-
-class Goblin(Enemy):
-    """
-    TODO: Add a description of this class
-    """
-    def __init__(self):
-        super().__init__("Goblin", 20, 50)
-
-# TODO: POSSIBLY REMOVE THIS CLASS AND ADD THE ENEMIES TO THE ENEMY CLASS
-
-class Orc(Enemy):
-    """
-    TODO: Add a description of this class
-    """
-    def __init__(self):
-        super().__init__("Orc", 30, 10)

@@ -1,49 +1,53 @@
 """
-TODO: DOCSTRING
+Database manager module containing the DatabaseManager class definition.
 """
 
-import sqlite3
 
 class DatabaseManager:
     """
-    TODO: DOCSTRING
+    Creates a DatabaseManager object that is responsible for storing and
+    retrieving data from database.
     """
 
-    def __init__(self):
-        self.db = sqlite3.connect("game_data.db")
-        self.cursor = self.db.cursor()
+    def __init__(self, database):
+        self.database = database
+        self.cursor = self.database.cursor()
 
-#        ARMAND TO FIX TO MANY ARGUMENTS ERRROR IN PYLINT PUT PLAYER OBJECT AS ARGUMENT
-#        AND PLAYER POSITION AS 2ND ARGUMENT
-    def save_player_data(self, player_type, position, name, max_health, current_health, damage):
+    def save_player_data(self, player, position):
         """
-        TODO: DOCSTRING
+        Saves player data to Player table in the database for world
+        restoration later.
         """
         self.clear_db()
         self.cursor.execute("INSERT INTO Players(Type, Position, "
                             "Name, MaxHealth, CurrentHealth, Damage)"
-                            "VALUES (?, ?, ?, ?, ?, ?)", (player_type, str(position), name,
-                            max_health, current_health, damage))
-        self.db.commit()
+                            "VALUES (?, ?, ?, ?, ?, ?)", (player.type, str(position), player.name,
+                                                          player.max_health, player.current_health,
+                                                          player.damage))
+        self.database.commit()
 
     def save_obstacle(self, obstacle_type, position):
         """
-        TODO: DOCSTRING
+        Stores obstacle data to the Obstacles table database for world
+        restoration later.
         """
         self.cursor.execute("INSERT INTO Players(?, ?)", (obstacle_type, position))
-        self.db.commit()
+        self.database.commit()
 
     def clear_db(self):
         """
-        TODO: DOCSTRING
+        Clears all previous entries in database tables.
         """
         self.cursor.execute("DELETE FROM Players")
         self.cursor.execute("DELETE FROM Obstacles")
-        self.db.commit()
+        self.database.commit()
 
     def retrieve_player_data(self):
         """
-        TODO: DOCSTRING
+        Retrieve player data from Player table in the database for world
+        restoration.
+
+        :return: data: Player data required for world restoration.
         """
         self.cursor.execute("SELECT * FROM Players")
         data = self.cursor.fetchall()

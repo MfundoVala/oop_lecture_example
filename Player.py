@@ -1,21 +1,28 @@
 """
-TODO: DOCSTRING
+Player module containing player class and subclasses for creation of player
+object.
 """
+
+
 class Player:
     """
-    TODO: DOCSTRING
+    Creates a player object with the necessary attributes and methods for
+    player interaction.
     """
-    def __init__(self, name, max_health, damage):
+
+    def __init__(self, name, max_health, damage, player_type):
         self.name = name
         self.max_health = max_health
         self.current_health = max_health
         self.damage = damage
         self.message = ""
-        self.type = "Player"
+        self.type = player_type
 
     def attack(self, enemy):
         """
-        TODO: DOCSTRING
+        Determines the result of player health remaining of after a collision
+        with an enemy object.
+        :return: True if player lives, False if player died.
         """
         damage = self.damage
         enemy.current_health -= damage
@@ -24,21 +31,3 @@ class Player:
             self.message += "\n" + f"{self.name} has defeated {enemy.name}!"
             return True
         return False
-
-
-# create a class for each type of Player
-# TODO: POSSIBLY REMOVE THIS CLASS AND ADD THE PLAYERS TO THE PLAYER CLASS
-class Warrior(Player):
-    """
-    TODO: DOCSTRING
-    """
-    def __init__(self, name):
-        super().__init__(name, 100, 10)
-
-# TODO: POSSIBLY REMOVE THIS CLASS AND ADD THE PLAYERS TO THE PLAYER CLASS
-class Wizard(Player):
-    """
-    TODO: DOCSTRING
-    """
-    def __init__(self, name):
-        super().__init__(name, 20, 20)

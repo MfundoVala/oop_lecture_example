@@ -1,17 +1,17 @@
 """
-TODO: 
 This module contains the World class, which is used 
 to create a world for the player to explore.
 """
 import random
-from database_manager import DatabaseManager
+import sys
 from player import Player
-from obstacles import Obstacle, Wall, Trap
-from enemy import Enemy, Goblin, Orc
+from obstacles import Obstacle
+from enemy import Enemy
+
 
 class Exit:
     """
-    TODO: DOCSTRING
+    Creates an exit object for detecting if player finished game.
     """
     def __init__(self, message):
         self.message = message
@@ -19,21 +19,22 @@ class Exit:
 
 class World:
     """
-    TODO: DOCSTRING
+    Creates a world object responsible for providing output to player,
+    detecting player movement and storing player data.
     """
     size = 0
     player = None
-    db = DatabaseManager()
 
-    def __init__(self, size):
+    def __init__(self, size, database):
         self.size = size
-        self.grid = [ [ None for _ in range(size) ] for _ in range(size) ]
+        self.grid = [[None for _ in range(size)] for _ in range(size) ]
         self.player_position = (0, 0)
+        self.database = database
 
     # print the map from the 2d array grid values
     def print_map(self):
         """
-        TODO: DOCSTRING
+        Print world map to terminal.
         """
         for row in self.grid:
             for cell in row:
@@ -49,19 +50,19 @@ class World:
                     print("X", end="")
             print()
         self.store_grid_to_file()
-        if not self.player is None:
+        if self.player is not None:
             self.store_player_data()
 
     def store_player_data(self):
         """
-        TODO: DOCSTRING
+        Store player data to database through DatabaseManager.
         """
-        self.db.save_player_data("Player", self.player_position, self.player.name, self.player.max_health,
-                                  self.player.current_health, self.player.damage)
+        self.database.save_player_data(self.player, self.player_position)
 
     def store_grid_to_file(self):
         """
-        TODO: DOCSTRING
+        Stores a copy of the world to a text file to recall for world
+        restoration.
         """
         with open("grid_save.txt", "w", encoding="utf-8") as file:
             for row in self.grid:
@@ -80,72 +81,72 @@ class World:
 
     def get_stored_world(self):
         """
-        TODO: DOCSTRING
+        Retrieve required data to restore previous world.
         """
         with open("grid_save.txt", "r", encoding="utf-8") as file:
             data = file.readlines()
-            for x, line in enumerate(data):
-                for y, value in enumerate(line):
+            for x_position, line in enumerate(data):
+                for y_position, value in enumerate(line):
                     if value == "E":
-                        self.grid[x][y] = random.choice([Goblin(), Orc()])
+                        self.grid[x_position][y_position] = random.choice([Enemy("Goblin", 20, 50),
+                                                                           Enemy("Orc", 30, 10)])
                     elif value == "O":
-                        self.grid[x][y] = random.choice([Wall(), Trap()])
+                        self.grid[x_position][y_position] = random.choice([Obstacle("Wall", 10),
+                                                                           Obstacle("Trap", 20)])
                     elif value == "X":
-                        self.grid[x][y] = Exit("Goodbye")
+                        self.grid[x_position][y_position] = Exit("Goodbye")
                     elif value == "P":
-                        player_data = self.db.retrieve_player_data()
-                        self.grid[x][y] = self.player
-                        self.player_position = (y, x)
+                        player_data = self.database.retrieve_player_data()
+                        self.grid[x_position][y_position] = self.player
+                        self.player_position = (y_position, x_position)
                         print(player_data)
 
     def move_player(self, direction):
+        """
+        Move player to given direction and detect if a collision has occurred.
+        :param direction: Direction player moves in.
+        """
         output = """Game start!"""
 
-        x, y = self.player_position
-        if direction == "w" or direction == "up":
-            y -= 1
-        elif direction == "s" or direction == "down":
-            y += 1
-        elif direction == "a" or direction == "left":
-            x -= 1
-        elif direction == "d" or direction == "right":
-            x += 1
+        x_position, y_position = self.player_position
+        if direction in ("w", "up"):
+            y_position -= 1
+        elif direction in ("s", "down"):
+            y_position += 1
+        elif direction in ("a", "left"):
+            x_position -= 1
+        elif direction in ("d", "right"):
+            x_position += 1
 
-        if x < 0 or x >= self.size or y < 0 or y >= self.size:
+        if x_position < 0 or x_position >= self.size or y_position < 0 or y_position >= self.size:
             print("You hit a wall!")
             return
 
-        cell = self.grid[y][x]
-        
+        # Determine collisions
+        cell = self.grid[y_position][x_position]
         if cell is None:
             output = "You move into the empty space."
-
         elif isinstance(cell, Obstacle):
             damage = cell.damage
             output = f"You hit a {cell.name} and take {damage} damage!"
             self.player.current_health -= damage
             if self.player.current_health <= 0:
-                output = "You have died."
-                exit()
+                print("You have died.")
+                sys.exit()
         elif isinstance(cell, Enemy):
             enemy_defeated = self.player.attack(cell)
             output = \
                 self.player.message
             if enemy_defeated:
-                self.grid[y][x] = None
+                self.grid[y_position][x_position] = None
         elif isinstance(cell, Exit):
             print(cell.message)
-            exit()
+            sys.exit()
 
         self.grid[self.player_position[1]][self.player_position[0]] = None
-        self.player_position = (x, y)
-        self.grid[y][x] = self.player
+        self.player_position = (x_position, y_position)
+        self.grid[y_position][x_position] = self.player
 
         self.print_map()
 
         print(output)
-
-    def save(self):
-        # save
-    
-        pass
