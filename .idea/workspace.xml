@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="50b55ab3-f37b-497b-a894-5f9438bd7a02" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/launch.bat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_data.db" beforeDir="false" afterPath="$PROJECT_DIR$/game_data.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/grid_save.txt" beforeDir="false" afterPath="$PROJECT_DIR$/grid_save.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Player.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/player.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,5 +70,16 @@
       <updated>1681839134797</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
