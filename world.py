@@ -136,6 +136,12 @@ class World:
 
 
     def determine_collision(self, new_x, new_y):
+        """
+        Determine object in cell player is moving to and calls to appropriate functions.
+
+        :param: new_x: x position of new cell.
+        :param: new_x: y position of new cell.
+        """
         cell = self.grid[new_x][new_y]
         output = ""
         if cell is None:
@@ -157,27 +163,33 @@ class World:
         return output
 
     def populate_grid(self, total_enemies = 2, total_obstacles = 3):
+        """
+        Populates the world object's grid with the player, enemies and obstacles.
+
+        :param: total_enemies: Amount of enemies to add.
+        :param: total_obstacles: Amount of obstacles to add.
+        """
         self.grid[0][0] = self.player
 
         for i in range(total_enemies):
             while True:
-                x, y = (random.randrange(0, 9), random.randrange(0, 9))
-                if self.grid[x][y] is None:
+                temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
+                if self.grid[temp_x][temp_y] is None:
                     enemy_type = random.choice([Enemy("Goblin", 20, 50), Enemy("Orc", 30, 10)])
-                    self.grid[x][y] = enemy_type
+                    self.grid[temp_x][temp_y] = enemy_type
                     break
         for i in range(total_obstacles):
             while True:
-                x, y = (random.randrange(0, 9), random.randrange(0, 9))
-                if self.grid[x][y] is None:
+                temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
+                if self.grid[temp_x][temp_y] is None:
                     obstacle_type = random.choice([Obstacle("Wall", 10), Obstacle("Trap", 20)])
-                    self.grid[x][y] = obstacle_type
+                    self.grid[temp_x][temp_y] = obstacle_type
                     break
         while True:
-            x, y = (random.randrange(0, 9), random.randrange(0, 9))
-            if self.grid[x][y] is None:
-                x, y = (random.randrange(0, 9), random.randrange(0, 9))
-                self.grid[x][y] = Exit("Congratulations! You have"
+            temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
+            if self.grid[temp_x][temp_y] is None:
+                temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
+                self.grid[temp_x][temp_y] = Exit("Congratulations! You have"
                                        " found the exit and "
                                        "beaten the game!")
                 break
