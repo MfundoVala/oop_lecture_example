@@ -10,11 +10,6 @@ from enemy import Enemy
 from world import World, Exit
 
 
-def random_position():
-    """:return: Random number between 1 and 9"""
-    return random.randint(1, 9)
-
-
 def main():
     """
     Main loop creating or restoring player data then calls to World object

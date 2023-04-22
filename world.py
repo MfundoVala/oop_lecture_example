@@ -125,7 +125,6 @@ class World:
             return
 
         output = self.determine_collision(x_position, y_position)
-        
 
         self.grid[self.player_position[0]][self.player_position[1]] = None
         self.player_position = (x_position, y_position)
@@ -179,7 +178,7 @@ class World:
             x, y = (random.randrange(0, 9), random.randrange(0, 9))
             if self.grid[x][y] is None:
                 x, y = (random.randrange(0, 9), random.randrange(0, 9))
-                self.grid[random.randrange(0, 9)][random.randrange(0, 9)] = Exit("Congratulations! You have"
-                                                                                 " found the exit and "
-                                                                                 "beaten the game!")
+                self.grid[x][y] = Exit("Congratulations! You have"
+                                       " found the exit and "
+                                       "beaten the game!")
                 break
