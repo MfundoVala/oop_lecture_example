@@ -4,6 +4,7 @@ to create a world for the player to explore.
 """
 import random
 import sys
+import os
 from player import Player
 from obstacles import Obstacle
 from enemy import Enemy
@@ -22,20 +23,20 @@ class World:
     Creates a world object responsible for providing output to player,
     detecting player movement and storing player data.
     """
-    size = 0
-    player = None
 
     def __init__(self, size, database):
         self.size = size
         self.grid = [[None for _ in range(size)] for _ in range(size) ]
         self.player_position = (0, 0)
         self.database = database
+        self.player = None
 
-    # print the map from the 2d array grid values
     def print_map(self):
         """
         Print world map to terminal.
         """
+        os.system('cls')
+        # print("grind: " + str(self.grid))
         for row in self.grid:
             for cell in row:
                 if cell is None:
@@ -98,7 +99,7 @@ class World:
                     elif value == "P":
                         player_data = self.database.retrieve_player_data()
                         self.grid[x_position][y_position] = self.player
-                        self.player_position = (y_position, x_position)
+                        self.player_position = (x_position, y_position)
                         print(player_data)
 
     def move_player(self, direction):
@@ -110,43 +111,75 @@ class World:
 
         x_position, y_position = self.player_position
         if direction in ("w", "up"):
-            y_position -= 1
-        elif direction in ("s", "down"):
-            y_position += 1
-        elif direction in ("a", "left"):
             x_position -= 1
-        elif direction in ("d", "right"):
+        elif direction in ("s", "down"):
             x_position += 1
+        elif direction in ("a", "left"):
+            y_position -= 1
+        elif direction in ("d", "right"):
+            y_position += 1
 
         if x_position < 0 or x_position >= self.size or y_position < 0 or y_position >= self.size:
             print("You hit a wall!")
+            self.print_map()
             return
 
-        # Determine collisions
-        cell = self.grid[y_position][x_position]
+        output = self.determine_collision(x_position, y_position)
+        
+
+        self.grid[self.player_position[0]][self.player_position[1]] = None
+        self.player_position = (x_position, y_position)
+        self.grid[x_position][y_position] = self.player
+
+        self.print_map()
+
+        print(output)
+
+
+    def determine_collision(self, new_x, new_y):
+        cell = self.grid[new_x][new_y]
+        output = ""
+        print(cell)
         if cell is None:
             output = "You move into the empty space."
         elif isinstance(cell, Obstacle):
             damage = cell.damage
             output = f"You hit a {cell.name} and take {damage} damage!"
-            self.player.current_health -= damage
-            if self.player.current_health <= 0:
+            self.player.take_damage(damage)
+            if self.player.is_dead():
                 print("You have died.")
                 sys.exit()
         elif isinstance(cell, Enemy):
             enemy_defeated = self.player.attack(cell)
-            output = \
-                self.player.message
+            output = self.player.message
             if enemy_defeated:
-                self.grid[y_position][x_position] = None
+                self.grid[new_x][new_y] = None
         elif isinstance(cell, Exit):
             print(cell.message)
             sys.exit()
+        return output
 
-        self.grid[self.player_position[1]][self.player_position[0]] = None
-        self.player_position = (x_position, y_position)
-        self.grid[y_position][x_position] = self.player
+    def populate_grid(self, total_enemies = 2, total_obstacles = 3):
+        self.grid[0][0] = self.player
 
-        self.print_map()
-
-        print(output)
+        for i in range(total_enemies):
+            x, y = (random.randrange(0, 9), random.randrange(0, 9))
+            if self.grid[x][y] is None:
+                enemy_type = random.choice([Enemy("Goblin", 20, 50), Enemy("Orc", 30, 10)])
+                self.grid[x][y] = enemy_type
+                break
+        for i in range(total_obstacles):
+            while True:
+                x, y = (random.randrange(0, 9), random.randrange(0, 9))
+                if self.grid[x][y] is None:
+                    obstacle_type = random.choice([Obstacle("Wall", 10), Obstacle("Trap", 20)])
+                    self.grid[x][y] = obstacle_type
+                    break
+        while True:
+            x, y = (random.randrange(0, 9), random.randrange(0, 9))
+            if self.grid[x][y] is None:
+                x, y = (random.randrange(0, 9), random.randrange(0, 9))
+                self.grid[random.randrange(0, 9)][random.randrange(0, 9)] = Exit("Congratulations! You have"
+                                                                                 " found the exit and "
+                                                                                 "beaten the game!")
+                break

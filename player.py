@@ -31,3 +31,14 @@ class Player:
             self.message += "\n" + f"{self.name} has defeated {enemy.name}!"
             return True
         return False
+    
+
+    def take_damage(self, damage_amount):
+        self.damage -= damage_amount
+
+
+    def is_dead(self):
+        if self.current_health <= 0:
+            return True
+        else:
+            return False

@@ -10,6 +10,11 @@ from enemy import Enemy
 from world import World, Exit
 
 
+def random_position():
+    """:return: Random number between 1 and 9"""
+    return random.randint(1, 9)
+
+
 def main():
     """
     Main loop creating or restoring player data then calls to World object
@@ -28,12 +33,13 @@ def main():
         current_world.player = player
         current_world.get_stored_world()
     else:
-        player_type = input("Choose your player type:\n"
-                            "1. Warrior\n"
-                            "2. Wizard\n"
-                            ">>> ")
-
         while True:
+            player_type = input("Choose your player type:\n"
+                                "1. Warrior\n"
+                                "2. Wizard\n"
+                                ">>> ")
+
+
             if player_type.lower() == "1":
                 player = Player(player_name, 100, 10, "Warrior")
                 break
@@ -42,19 +48,8 @@ def main():
                 break
             print("Invalid player type.")
 
-        def random_position():
-            """:return: Random number between 1 and 9"""
-            return random.randint(1, 9)
-
         current_world.player = player
-        current_world.grid[0][0] = player
-        current_world.grid[random_position()][random_position()] = Obstacle("Wall", 10)
-        current_world.grid[random_position()][random_position()] = Obstacle("Trap", 20)
-        current_world.grid[random_position()][random_position()] = Enemy("Goblin", 20, 50)
-        current_world.grid[random_position()][random_position()] = Enemy("Orc", 30, 10)
-        current_world.grid[random_position()][random_position()] = Exit("Congratulations! You have"
-                                                                        " found the exit and "
-                                                                        "beaten the game!")
+        current_world.populate_grid()
 
     current_world.print_map()
 
