@@ -96,10 +96,10 @@ class World:
                     elif value == "X":
                         self.grid[x_position][y_position] = Exit("Goodbye")
                     elif value == "P":
-                        player_data = self.database.retrieve_player_data()
+                        # player_data = self.database.retrieve_player_data()
                         self.grid[x_position][y_position] = self.player
                         self.player_position = (x_position, y_position)
-                        print(player_data)
+                        # print(player_data)
 
     def move_player(self, direction):
         """
