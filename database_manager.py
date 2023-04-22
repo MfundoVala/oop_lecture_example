@@ -51,5 +51,6 @@ class DatabaseManager:
         """
         self.cursor.execute("SELECT * FROM Players")
         data = self.cursor.fetchall()
+        print(data)
         return data
     
