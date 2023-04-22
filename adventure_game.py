@@ -5,9 +5,7 @@ import random
 import sqlite3
 import database_manager
 from player import Player
-from obstacles import Obstacle
-from enemy import Enemy
-from world import World, Exit
+from world import World
 
 
 def main():
@@ -39,12 +37,12 @@ def main():
                 player = Player(player_name, 100, 10, "Warrior")
                 break
             if player_type.lower() == "2":
-                player = Player(player_name, 20, 20, "Wizard")
+                player = Player(player_name, 50, 20, "Wizard")
                 break
             print("Invalid player type.")
 
         current_world.player = player
-        current_world.populate_grid()
+        current_world.populate_grid(5)
 
     current_world.print_map()
 

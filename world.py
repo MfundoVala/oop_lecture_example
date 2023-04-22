@@ -36,7 +36,6 @@ class World:
         Print world map to terminal.
         """
         os.system('cls')
-        # print("grind: " + str(self.grid))
         for row in self.grid:
             for cell in row:
                 if cell is None:
@@ -44,9 +43,9 @@ class World:
                 elif isinstance(cell, Player):
                     print("P", end="")
                 elif isinstance(cell, Obstacle):
-                    print("O", end="")
+                    print(cell.prefix, end="")
                 elif isinstance(cell, Enemy):
-                    print("E", end="")
+                    print(cell.prefix, end="")
                 elif isinstance(cell, Exit):
                     print("X", end="")
             print()
@@ -133,18 +132,17 @@ class World:
         self.print_map()
 
         print(output)
+        print(f"Current health:  {self.player.current_health}")
 
 
     def determine_collision(self, new_x, new_y):
         cell = self.grid[new_x][new_y]
         output = ""
-        print(cell)
         if cell is None:
             output = "You move into the empty space."
         elif isinstance(cell, Obstacle):
-            damage = cell.damage
-            output = f"You hit a {cell.name} and take {damage} damage!"
-            self.player.take_damage(damage)
+            output = f"You hit a {cell.name} and take {cell.damage} damage!"
+            self.player.take_damage(cell.damage)
             if self.player.is_dead():
                 print("You have died.")
                 sys.exit()
@@ -162,11 +160,12 @@ class World:
         self.grid[0][0] = self.player
 
         for i in range(total_enemies):
-            x, y = (random.randrange(0, 9), random.randrange(0, 9))
-            if self.grid[x][y] is None:
-                enemy_type = random.choice([Enemy("Goblin", 20, 50), Enemy("Orc", 30, 10)])
-                self.grid[x][y] = enemy_type
-                break
+            while True:
+                x, y = (random.randrange(0, 9), random.randrange(0, 9))
+                if self.grid[x][y] is None:
+                    enemy_type = random.choice([Enemy("Goblin", 20, 50), Enemy("Orc", 30, 10)])
+                    self.grid[x][y] = enemy_type
+                    break
         for i in range(total_obstacles):
             while True:
                 x, y = (random.randrange(0, 9), random.randrange(0, 9))

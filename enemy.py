@@ -15,6 +15,7 @@ class Enemy:
         self.current_health = max_health
         self.damage = damage
         self.message = ""
+        self.prefix = self.name[0]
 
     def attack(self, player):
         """
@@ -24,3 +25,8 @@ class Enemy:
         damage = self.damage
         player.current_health -= damage
         self.message = f"The {self.name} deals {damage} damage to {player.name}!"
+
+
+    def take_damage(self, damage_amount):
+        """Reduces enemy health by amount given."""
+        self.current_health -= damage_amount
