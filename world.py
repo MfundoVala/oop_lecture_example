@@ -30,7 +30,7 @@ class World:
         self.player_position = (0, 0)
         self.database = database
         self.player = None
-
+        self.message = ""
 
     def create_new_player(self, player_name):
         """Create new player."""
@@ -48,7 +48,6 @@ class World:
                 break
             print("Invalid player type.")
 
-
     def restore_previous_player(self):
         """Restores player data from previous game"""
         data = self.database.retrieve_player_data()
@@ -57,7 +56,6 @@ class World:
         else:
             self.player = Player(data[2], 50, 20, "Wizard")
         self.player.current_health = data[4]
-
 
     def print_map(self):
         """
@@ -77,6 +75,8 @@ class World:
                 elif isinstance(cell, Exit):
                     print("X", end="")
             print()
+        print(self.message)
+        print(f"Current health:  {self.player.current_health}")
         self.store_grid_to_file()
         if self.player is not None:
             self.store_player_data()
@@ -124,17 +124,14 @@ class World:
                     elif value == "X":
                         self.grid[x_position][y_position] = Exit("Goodbye")
                     elif value == "P":
-                        # player_data = self.database.retrieve_player_data()
                         self.grid[x_position][y_position] = self.player
                         self.player_position = (x_position, y_position)
-                        # print(player_data)
 
     def move_player(self, direction):
         """
         Move player to given direction and detect if a collision has occurred.
         :param direction: Direction player moves in.
         """
-        output = """Game start!"""
 
         x_position, y_position = self.player_position
         if direction in ("w", "up"):
@@ -151,17 +148,11 @@ class World:
             self.print_map()
             return
 
-        output = self.determine_collision(x_position, y_position)
+        self.determine_collision(x_position, y_position)
 
         self.grid[self.player_position[0]][self.player_position[1]] = None
         self.player_position = (x_position, y_position)
         self.grid[x_position][y_position] = self.player
-
-        self.print_map()
-
-        print(output)
-        print(f"Current health:  {self.player.current_health}")
-
 
     def determine_collision(self, new_x, new_y):
         """
@@ -171,24 +162,22 @@ class World:
         :param: new_x: y position of new cell.
         """
         cell = self.grid[new_x][new_y]
-        output = ""
         if cell is None:
-            output = "You move into the empty space."
+            self.message = "You move into the empty space."
         elif isinstance(cell, Obstacle):
-            output = f"You hit a {cell.name} and take {cell.damage} damage!"
+            self.message = f"You hit a {cell.name} and take {cell.damage} damage!"
             self.player.take_damage(cell.damage)
             if self.player.is_dead():
                 print("You have died.")
                 sys.exit()
         elif isinstance(cell, Enemy):
             enemy_defeated = self.player.attack(cell)
-            output = self.player.message
+            self.message = self.player.message
             if enemy_defeated:
                 self.grid[new_x][new_y] = None
         elif isinstance(cell, Exit):
             print(cell.message)
             sys.exit()
-        return output
 
     def populate_grid(self, total_enemies = 2, total_obstacles = 3):
         """

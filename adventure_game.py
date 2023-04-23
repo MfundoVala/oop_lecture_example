@@ -12,20 +12,25 @@ def main():
     to start game.
     """
     game_database = database_manager.DatabaseManager(sqlite3.connect("game_data.db"))
-    restore = input("Do you want to restore your previous game? (y/n): ")
     current_world = World(10, game_database)
 
-    if restore.lower() == "y":
-        current_world.restore_previous_player()
-        current_world.get_stored_world()
-    else:
-        name = input("What is your name?: ")
-        current_world.create_new_player(name)
-        current_world.populate_grid(5, 5)
-
-    current_world.print_map()
+    while True:
+        menu = input("***********GAME NAME***********\n"
+                    "1. New Game\n"
+                    "2. Restore previous game\n>")
+        if menu == "1":
+            name = input("What is your name?: ")
+            current_world.create_new_player(name)
+            current_world.populate_grid(5, 5)
+            break
+        if menu == "2":
+            current_world.restore_previous_player()
+            current_world.get_stored_world()
+            break
+        print("Unfortunately you have not selected one of the options.")
 
     while True:
+        current_world.print_map()
         direction = input("Which direction do you want to move?\n"
                           "W - up\n"
                           "S - down\n"
