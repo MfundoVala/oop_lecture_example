@@ -1,7 +1,6 @@
 """
 Database manager module containing the DatabaseManager class definition.
 """
-import sqlite3
 
 class DatabaseManager:
     """
@@ -53,9 +52,3 @@ class DatabaseManager:
         self.cursor.execute("SELECT * FROM Players")
         data = self.cursor.fetchone()
         return data
-    
-
-# db = DatabaseManager(sqlite3.connect("game_data.db"))
-
-# db.clear_db
-    

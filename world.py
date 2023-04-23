@@ -31,6 +31,34 @@ class World:
         self.database = database
         self.player = None
 
+
+    def create_new_player(self, player_name):
+        """Create new player."""
+        while True:
+            player_type = input("Choose your player type:\n"
+                                "1. Warrior\n"
+                                "2. Wizard\n"
+                                ">>> ")
+
+            if player_type.lower() == "1":
+                self.player = Player(player_name, 100, 10, "Warrior")
+                break
+            if player_type.lower() == "2":
+                self.player = Player(player_name, 50, 20, "Wizard")
+                break
+            print("Invalid player type.")
+
+
+    def restore_previous_player(self):
+        """Restores player data from previous game"""
+        data = self.database.retrieve_player_data()
+        if data[0] == "Warrior":
+            self.player = Player(data[2], 100, 10, "Warrior")
+        else:
+            self.player = Player(data[2], 50, 20, "Wizard")
+        self.player.current_health = data[4]
+
+
     def print_map(self):
         """
         Print world map to terminal.
