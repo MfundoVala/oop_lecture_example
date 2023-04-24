@@ -143,16 +143,27 @@ class World:
         elif direction in ("d", "right"):
             y_position += 1
 
-        if x_position < 0 or x_position >= self.size or y_position < 0 or y_position >= self.size:
-            print("You hit a wall!")
+        if not self.determine_wall_collision(x_position, y_position):
+
+            self.determine_collision(x_position, y_position)
+
+            self.grid[self.player_position[0]][self.player_position[1]] = None
+            self.player_position = (x_position, y_position)
+            self.grid[x_position][y_position] = self.player
+
+
+    def determine_wall_collision(self, x_pos, y_pos):
+        """
+        Determine if player is colliding with a wall.
+
+        :param: x_pos: x position of new cell.
+        :param: y_pos: y position of new cell.
+        """
+        if x_pos < 0 or x_pos >= self.size or y_pos < 0 or y_pos >= self.size:
             self.print_map()
-            return
+            return True
+        return False
 
-        self.determine_collision(x_position, y_position)
-
-        self.grid[self.player_position[0]][self.player_position[1]] = None
-        self.player_position = (x_position, y_position)
-        self.grid[x_position][y_position] = self.player
 
     def determine_collision(self, new_x, new_y):
         """
