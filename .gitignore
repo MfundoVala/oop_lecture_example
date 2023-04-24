@@ -1,5 +1,4 @@
 .idea/
 __pycache__/
 venv/
-game_data.db
 grid_save.txt
