@@ -1,3 +1,8 @@
 .idea/
 __pycache__/
+<<<<<<< HEAD
 venv/
+=======
+venv/
+grid_save.txt
+>>>>>>> 4a93b6f26dc2ce12d141a225c999dba8a92f3ac2

@@ -8,4 +8,4 @@ class Obstacle:
     def __init__(self, name, damage):
         self.name = name
         self.damage = damage
-        
+        self.prefix = self.name[0]

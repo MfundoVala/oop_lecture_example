@@ -24,10 +24,19 @@ class Player:
         with an enemy object.
         :return: True if player lives, False if player died.
         """
-        damage = self.damage
-        enemy.current_health -= damage
-        self.message = f"{self.name} deals {damage} damage to {enemy.name}!"
+        enemy.take_damage(self.damage)
+        self.message = f"{self.name} deals {self.damage} damage to {enemy.name}!"
         if enemy.current_health <= 0:
             self.message += "\n" + f"{self.name} has defeated {enemy.name}!"
             return True
         return False
+
+
+    def take_damage(self, damage_amount):
+        """Reduces player health by amount given."""
+        self.current_health -= damage_amount
+
+
+    def is_dead(self):
+        """Determine if player is dead."""
+        return self.current_health <= 0

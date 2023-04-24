@@ -2,7 +2,6 @@
 Database manager module containing the DatabaseManager class definition.
 """
 
-
 class DatabaseManager:
     """
     Creates a DatabaseManager object that is responsible for storing and
@@ -31,6 +30,7 @@ class DatabaseManager:
         Stores obstacle data to the Obstacles table database for world
         restoration later.
         """
+        self.clear_db()
         self.cursor.execute("INSERT INTO Players(?, ?)", (obstacle_type, position))
         self.database.commit()
 
@@ -50,6 +50,5 @@ class DatabaseManager:
         :return: data: Player data required for world restoration.
         """
         self.cursor.execute("SELECT * FROM Players")
-        data = self.cursor.fetchall()
+        data = self.cursor.fetchone()
         return data
-    
