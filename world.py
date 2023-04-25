@@ -68,7 +68,7 @@ class World:
         """
         Print world map to terminal.
         """
-        os.system('cls') 
+        os.system('cls')
         for row in self.grid:
             for cell in row:
                 if cell is None:
@@ -93,7 +93,6 @@ class World:
         if self.player is not None:
             self.database.save_player_data(self.player, self.player_position)
 
-    
     def __store_grid_to_file(self):
         """
         Stores a copy of the world to a text file to recall for world
@@ -214,11 +213,12 @@ class World:
                                  "beaten the game!")])
 
 
-    def __add_objects(self, amount, type):
+    def __add_objects(self, amount, obj_types):
+        """Add given amount of given object to world grid"""
         for i in range(amount):
             while True:
                 temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
                 if self.grid[temp_x][temp_y] is None:
-                    new_object = random.choice(type)
+                    new_object = random.choice(obj_types)
                     self.grid[temp_x][temp_y] = new_object
                     break

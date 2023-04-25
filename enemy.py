@@ -1,8 +1,8 @@
-from obstacles import Obstacle
 """
 Enemy module containing Enemy class and subclasses for creation of Enemy
 objects.
 """
+from obstacles import Obstacle
 
 
 class Enemy(Obstacle):
@@ -11,21 +11,19 @@ class Enemy(Obstacle):
     enemy interaction.
     """
     def __init__(self, name, max_health, damage):
-        self.name = name
+        super().__init__(name, damage)
         self.max_health = max_health
         self.current_health = max_health
-        self.damage = damage
         self.message = ""
-        self.prefix = self.name[0]
 
-    def attack(self, player):
+    def attack(self, obj):
         """
         Applies a damage value to player's health after a collision
         with an enemy object.
         """
         damage = self.damage
-        player.current_health -= damage
-        self.message = f"The {self.name} deals {damage} damage to {player.name}!"
+        obj.current_health -= damage
+        self.message = f"The {self.name} deals {damage} damage to {obj.name}!"
 
     def take_damage(self, damage_amount):
         """Reduces objects health by amount given."""
