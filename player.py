@@ -1,21 +1,19 @@
+from enemy import Enemy
+
 """
 Player module containing player class and subclasses for creation of player
 object.
 """
 
 
-class Player:
+class Player(Enemy):
     """
     Creates a player object with the necessary attributes and methods for
     player interaction.
     """
 
     def __init__(self, name, max_health, damage, player_type):
-        self.name = name
-        self.max_health = max_health
-        self.current_health = max_health
-        self.damage = damage
-        self.message = ""
+        super().__init__(name, max_health, damage)
         self.type = player_type
 
     def attack(self, enemy):
@@ -30,12 +28,6 @@ class Player:
             self.message += "\n" + f"{self.name} has defeated {enemy.name}!"
             return True
         return False
-
-
-    def take_damage(self, damage_amount):
-        """Reduces player health by amount given."""
-        self.current_health -= damage_amount
-
 
     def is_dead(self):
         """Determine if player is dead."""

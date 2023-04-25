@@ -8,6 +8,7 @@ import os
 from player import Player
 from obstacles import Obstacle
 from enemy import Enemy
+from gnome import Gnome
 
 
 class Exit:
@@ -31,6 +32,7 @@ class World:
         self.database = database
         self.player = None
         self.message = ""
+        self.g_mode = False
 
     def create_new_player(self, player_name):
         """Create new player."""
@@ -79,13 +81,7 @@ class World:
         print(f"Current health:  {self.player.current_health}")
         self.store_grid_to_file()
         if self.player is not None:
-            self.store_player_data()
-
-    def store_player_data(self):
-        """
-        Store player data to database through DatabaseManager.
-        """
-        self.database.save_player_data(self.player, self.player_position)
+            self.database.save_player_data(self.player, self.player_position)
 
     def store_grid_to_file(self):
         """
@@ -198,26 +194,20 @@ class World:
         :param: total_obstacles: Amount of obstacles to add.
         """
         self.grid[0][0] = self.player
+        if self.g_mode:
+            self.add_objects(total_enemies + total_obstacles, [Gnome("Gnome")])
+        else:
+            self.add_objects(total_enemies, [Enemy("Goblin", 20, 50), Enemy("Orc", 30, 10)])
+            self.add_objects(total_obstacles, [Obstacle("Wall", 10), Obstacle("Trap", 20)])
+        self.add_objects(1, [Exit("Congratulations! You have found the exit and "
+                                 "beaten the game!")])
 
-        for i in range(total_enemies):
+
+    def add_objects(self, amount, type):
+        for i in range(amount):
             while True:
                 temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
                 if self.grid[temp_x][temp_y] is None:
-                    enemy_type = random.choice([Enemy("Goblin", 20, 50), Enemy("Orc", 30, 10)])
-                    self.grid[temp_x][temp_y] = enemy_type
+                    new_object = random.choice(type)
+                    self.grid[temp_x][temp_y] = new_object
                     break
-        for i in range(total_obstacles):
-            while True:
-                temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
-                if self.grid[temp_x][temp_y] is None:
-                    obstacle_type = random.choice([Obstacle("Wall", 10), Obstacle("Trap", 20)])
-                    self.grid[temp_x][temp_y] = obstacle_type
-                    break
-        while True:
-            temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
-            if self.grid[temp_x][temp_y] is None:
-                temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
-                self.grid[temp_x][temp_y] = Exit("Congratulations! You have"
-                                       " found the exit and "
-                                       "beaten the game!")
-                break
