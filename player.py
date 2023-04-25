@@ -15,6 +15,7 @@ class Player(Enemy):
     def __init__(self, name, max_health, damage, player_type):
         super().__init__(name, max_health, damage)
         self.type = player_type
+        
 
     def attack(self, enemy):
         """

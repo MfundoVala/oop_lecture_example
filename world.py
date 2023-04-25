@@ -40,13 +40,18 @@ class World:
             player_type = input("Choose your player type:\n"
                                 "1. Warrior\n"
                                 "2. Wizard\n"
+                                "3. Gnome\n"
                                 ">>> ")
 
-            if player_type.lower() == "1":
+            if player_type == "1":
                 self.player = Player(player_name, 100, 10, "Warrior")
                 break
-            if player_type.lower() == "2":
+            if player_type == "2":
                 self.player = Player(player_name, 50, 20, "Wizard")
+                break
+            if player_type == "3":
+                self.player = Gnome(player_name)
+                self.g_mode = True
                 break
             print("Invalid player type.")
 
@@ -63,11 +68,13 @@ class World:
         """
         Print world map to terminal.
         """
-        os.system('cls')
+        os.system('cls') 
         for row in self.grid:
             for cell in row:
                 if cell is None:
                     print(".", end="")
+                elif isinstance(cell, Gnome):
+                    print("G", end="")
                 elif isinstance(cell, Player):
                     print("P", end="")
                 elif isinstance(cell, Obstacle):
@@ -75,15 +82,19 @@ class World:
                 elif isinstance(cell, Enemy):
                     print(cell.prefix, end="")
                 elif isinstance(cell, Exit):
-                    print("X", end="")
+                    if self.g_mode:
+                        print("G", end="")
+                    else:
+                        print("X", end="")
             print()
         print(self.message)
         print(f"Current health:  {self.player.current_health}")
-        self.store_grid_to_file()
+        self.__store_grid_to_file()
         if self.player is not None:
             self.database.save_player_data(self.player, self.player_position)
 
-    def store_grid_to_file(self):
+    
+    def __store_grid_to_file(self):
         """
         Stores a copy of the world to a text file to recall for world
         restoration.
@@ -139,16 +150,16 @@ class World:
         elif direction in ("d", "right"):
             y_position += 1
 
-        if not self.determine_wall_collision(x_position, y_position):
+        if not self.__determine_wall_collision(x_position, y_position):
 
-            self.determine_collision(x_position, y_position)
+            self.__determine_collision(x_position, y_position)
 
             self.grid[self.player_position[0]][self.player_position[1]] = None
             self.player_position = (x_position, y_position)
             self.grid[x_position][y_position] = self.player
 
 
-    def determine_wall_collision(self, x_pos, y_pos):
+    def __determine_wall_collision(self, x_pos, y_pos):
         """
         Determine if player is colliding with a wall.
 
@@ -161,7 +172,7 @@ class World:
         return False
 
 
-    def determine_collision(self, new_x, new_y):
+    def __determine_collision(self, new_x, new_y):
         """
         Determine object in cell player is moving to and calls to appropriate functions.
 
@@ -195,15 +206,15 @@ class World:
         """
         self.grid[0][0] = self.player
         if self.g_mode:
-            self.add_objects(total_enemies + total_obstacles, [Gnome("Gnome")])
+            self.__add_objects(total_enemies + total_obstacles, [Gnome("Gnome")])
         else:
-            self.add_objects(total_enemies, [Enemy("Goblin", 20, 50), Enemy("Orc", 30, 10)])
-            self.add_objects(total_obstacles, [Obstacle("Wall", 10), Obstacle("Trap", 20)])
-        self.add_objects(1, [Exit("Congratulations! You have found the exit and "
+            self.__add_objects(total_enemies, [Enemy("Goblin", 20, 50), Enemy("Orc", 30, 10)])
+            self.__add_objects(total_obstacles, [Obstacle("Wall", 10), Obstacle("Trap", 20)])
+        self.__add_objects(1, [Exit("Congratulations! You have found the exit and "
                                  "beaten the game!")])
 
 
-    def add_objects(self, amount, type):
+    def __add_objects(self, amount, type):
         for i in range(amount):
             while True:
                 temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
