@@ -1,7 +1,7 @@
 ## How to run game
 
 - From program directory run program using the command: 
-  ### python adventure_game.py
+  ### launch.bat
 
 ## An overview of the Adventure Game
 
