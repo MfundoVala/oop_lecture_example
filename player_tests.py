@@ -1,8 +1,13 @@
+"""
+Player tests.
+"""
+
 import unittest
 
 from player import Player
 
 class TestPlayer(unittest.TestCase):
+    """Class for player tests."""
 
     player = Player("mfundo", 100, 10, "Warrior")
 
@@ -18,8 +23,7 @@ class TestPlayer(unittest.TestCase):
         """Test that player dies when health reaches zero."""
         self.player.current_health = 0
         self.assertTrue(self.player.is_dead())
-    
+
 if __name__ == "__main__":
     unittest.main()
-        
     
