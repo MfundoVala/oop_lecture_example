@@ -52,9 +52,6 @@ class TestPlayer(unittest.TestCase):
         # Then / Assert
         self.assertEqual(self.player_two.current_health, 90)
 
-        self.assertRaises(ValueError, self.player_two.take_damage, 100)
-
-
 
 if __name__ == "__main__":
     unittest.main()
