@@ -18,6 +18,7 @@ def main():
         menu = input("***********GAME NAME***********\n"
                     "1. New Game\n"
                     "2. Restore previous game\n>")
+        
         if menu == "1":
             name = input("What is your name?: ")
             current_world.create_new_player(name)

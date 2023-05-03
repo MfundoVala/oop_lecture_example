@@ -9,6 +9,7 @@ from player import Player
 from obstacles import Obstacle
 from enemy import Enemy
 from gnome import Gnome
+from custom_errors import WorldFullError
 
 
 class Exit:
@@ -33,6 +34,8 @@ class World:
         self.player = None
         self.message = ""
         self.g_mode = False
+        self.world_items = []
+        self.max_items = 5
 
     def create_new_player(self, player_name):
         """Create new player."""
@@ -205,20 +208,25 @@ class World:
         """
         self.grid[0][0] = self.player
         if self.g_mode:
-            self.__add_objects(total_enemies + total_obstacles, [Gnome("Gnome")])
+            self.add_objects(total_enemies + total_obstacles, [Gnome("Gnome")])
         else:
-            self.__add_objects(total_enemies, [Enemy("Goblin", 20, 50), Enemy("Orc", 30, 10)])
-            self.__add_objects(total_obstacles, [Obstacle("Wall", 10), Obstacle("Trap", 20)])
-        self.__add_objects(1, [Exit("Congratulations! You have found the exit and "
+            self.add_objects(total_enemies, [Enemy("Goblin", 20, 50), Enemy("Orc", 30, 10)])
+            self.add_objects(total_obstacles, [Obstacle("Wall", 10), Obstacle("Trap", 20)])
+        self.add_objects(1, [Exit("Congratulations! You have found the exit and "
                                  "beaten the game!")])
 
 
-    def __add_objects(self, amount, obj_types):
+    def add_objects(self, amount, obj_types):
         """Add given amount of given object to world grid"""
         for i in range(amount):
             while True:
-                temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
-                if self.grid[temp_x][temp_y] is None:
-                    new_object = random.choice(obj_types)
-                    self.grid[temp_x][temp_y] = new_object
-                    break
+                if len(self.world_items) <= self.max_items:
+                    temp_x, temp_y = (random.randrange(0, 9), random.randrange(0, 9))
+                    if self.grid[temp_x][temp_y] is None:
+                        new_object = random.choice(obj_types)
+                        self.grid[temp_x][temp_y] = new_object
+                        self.world_items.append(new_object)
+                        break
+                else:
+                    raise WorldFullError("World is full, cannot add more items.")
+                    

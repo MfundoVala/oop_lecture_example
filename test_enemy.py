@@ -45,6 +45,8 @@ class EnemyTest(unittest.TestCase):
         self.assertEqual(self.player.current_health, 90)
         self.assertEqual(self.enemy.message, "The Goblin deals 10 damage to mfundo!")
 
+    
+    
 
 
 
