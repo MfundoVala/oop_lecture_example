@@ -17,7 +17,9 @@ class WorldTest(unittest.TestCase):
         # Assert
         with self.assertRaises(WorldFullError):
             # When / Act
-            world.add_objects(20,'Goblin')
+            world.add_objects(10,'Goblin')
+
+    
 
 
 if __name__ == "__main__":
