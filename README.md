@@ -1,13 +1,17 @@
 ## How to run game
 
-- From program directory run program using the command: 
+## How to run tests
+
+python3 -m unittest tests/test_world.py
+
+- From program directory run program using the command:
   ### launch.bat
 
 ## An overview of the Adventure Game
 
-The adventure game is a maze game where the user selects a player (wizard or a warrior) and moves it around on grid to find the exit. 
+The adventure game is a maze game where the user selects a player (wizard or a warrior) and moves it around on grid to find the exit.
 
-During the navigation process the player can encounter obstacles such as walls and traps or enemies such as orcs or goblins. 
+During the navigation process the player can encounter obstacles such as walls and traps or enemies such as orcs or goblins.
 An encounter with an enemy or obstacle will cause the player to loose
 health points.
 

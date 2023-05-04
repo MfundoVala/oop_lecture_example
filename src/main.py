@@ -2,8 +2,8 @@
 Main program
 """
 import sqlite3
-import database_manager
-from world import World
+from .database_manager import DatabaseManager
+from .world import World
 
 
 def main():
@@ -11,7 +11,7 @@ def main():
     Main loop creating or restoring player data then calls to World object
     to start game.
     """
-    game_database = database_manager.DatabaseManager(sqlite3.connect("game_data.db"))
+    game_database = DatabaseManager(sqlite3.connect("game_data.db"))
     current_world = World(10, game_database)
 
     while True:

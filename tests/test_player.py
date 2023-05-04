@@ -3,9 +3,8 @@ Player tests.
 """
 
 import unittest
-from unittest.mock import patch
 
-from player import Player
+from src.player import Player
 
 class TestPlayer(unittest.TestCase):
     """Class for player tests."""

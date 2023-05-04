@@ -1,8 +1,8 @@
 """Test file for world.py."""
 import unittest
 
-from world import World
-from custom_errors import WorldFullError
+from src.world import World
+from src.custom_errors import WorldFullError
 
 
 class WorldTest(unittest.TestCase):
@@ -17,7 +17,7 @@ class WorldTest(unittest.TestCase):
         # Assert
         with self.assertRaises(WorldFullError):
             # When / Act
-            world.add_objects(10,'Goblin')
+            world.add_objects(200,'Goblin')
 
     
 

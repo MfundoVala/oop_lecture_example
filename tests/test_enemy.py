@@ -1,8 +1,10 @@
 """Test enemy class."""
 import unittest
 
-from enemy import Enemy
-from player import Player
+### Import Player and Enemy from src/project
+from src.player import Player
+from src.enemy import Enemy
+
 
 class EnemyTest(unittest.TestCase):
     """Class for enemy tests."""
@@ -44,10 +46,6 @@ class EnemyTest(unittest.TestCase):
         # Then / Assert
         self.assertEqual(self.player.current_health, 90)
         self.assertEqual(self.enemy.message, "The Goblin deals 10 damage to mfundo!")
-
-    
-    
-
 
 
 if __name__ == "__main__":

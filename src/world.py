@@ -5,11 +5,12 @@ to create a world for the player to explore.
 import random
 import sys
 import os
-from player import Player
-from obstacles import Obstacle
-from enemy import Enemy
-from gnome import Gnome
-from custom_errors import WorldFullError
+# pylint: disable=import-error
+from .player import Player
+from .obstacles import Obstacle
+from .enemy import Enemy
+from .gnome import Gnome
+from .custom_errors import WorldFullError
 
 
 class Exit:
@@ -35,7 +36,7 @@ class World:
         self.message = ""
         self.g_mode = False
         self.world_items = []
-        self.max_items = 5
+        self.max_items = 50
 
     def create_new_player(self, player_name):
         """Create new player."""
