@@ -5,12 +5,13 @@ to create a world for the player to explore.
 import random
 import sys
 import os
+
 # pylint: disable=import-error
-from .player import Player
-from .obstacles import Obstacle
-from .enemy import Enemy
-from .gnome import Gnome
-from .custom_errors import WorldFullError
+from player import Player
+from obstacles import Obstacle
+from enemy import Enemy
+from gnome import Gnome
+from custom_errors import WorldFullError
 
 
 class Exit:

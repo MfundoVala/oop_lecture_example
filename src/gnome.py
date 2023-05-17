@@ -1,6 +1,6 @@
 """This module contains the Gnome class."""
 
-from .player import Player
+from player import Player
 
 class Gnome(Player):
     """Class for Gnome player."""  

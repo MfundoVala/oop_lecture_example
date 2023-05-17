@@ -2,8 +2,8 @@
 Main program
 """
 import sqlite3
-from .database_manager import DatabaseManager
-from .world import World
+from database_manager import DatabaseManager
+from world import World
 
 
 def main():

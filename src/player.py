@@ -2,7 +2,7 @@
 Player module containing player class and subclasses for creation of player
 object.
 """
-from .enemy import Enemy
+from enemy import Enemy
 
 
 class Player(Enemy):

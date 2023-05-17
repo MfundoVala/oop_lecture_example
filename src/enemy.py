@@ -3,7 +3,7 @@ Enemy module containing Enemy class and subclasses for creation of Enemy
 objects.
 """
 # pylint: disable=import-error
-from .obstacles import Obstacle
+from obstacles import Obstacle
 
 
 class Enemy(Obstacle):
