@@ -6,7 +6,6 @@ from player import Player
 class WorldTestCase(unittest.TestCase):
     def setUp(self):
         self.world = World(10, None)
-        self.world.grid = [[None for _ in range(10)] for _ in range(10)]
         self.world.player_position = (0, 0)
         self.world.player = Player("mfundo", 100, 10, "Warrior")
 
