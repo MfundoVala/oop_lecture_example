@@ -26,6 +26,13 @@ class WorldTestCase(unittest.TestCase):
         self.world.grid[0][1] = health_pick_up
         self.world.move_player("d")
         self.assertEqual(self.world.player.current_health, 150)
+        
+    def test_player_moves_over_health_pickup_and_health_increases_by_hundred(self):
+        health_pick_up = MagicMock(value = 100)
+        health_pick_up.name= "health"
+        self.world.grid[0][1] = health_pick_up
+        self.world.move_player("d")
+        self.assertEqual(self.world.player.current_health, 200)
 
 
 if __name__ == '__main__':
