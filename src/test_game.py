@@ -1,24 +1,31 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from world import World
-from player import Player
+import player
 
 class WorldTestCase(unittest.TestCase):
-    def setUp(self):
+    
+    @patch("player.Player")
+    def setUp(self, player):
+        # Arrange
         self.world = World(10, None)
-        self.world.player_position = (0, 0)
-        self.world.player = Player("mfundo", 100, 10, "Warrior")
+        self.world.player = player
+        self.world.player.player_position = (0, 0)
+        self.world.player.current_health = 100
 
-    @patch('builtins.print')
-    def test_move_player_collision(self, mock_print):
-        # Simulate move
-        self.world.move_player("w")
-
+    
+    def test_move_player_into_an_empty_space(self):
+        # Act
+        self.world.move_player("d")
         # Assert that the player position moves
-        self.assertEqual(self.world.player_position, (0, 1))
-
-        # Assert that the print function was called with the appropriate message
-        mock_print.assert_called_with("You move into the empty space.")
+        self.assertEqual(self.world.player.player_position, (0, 1))
+        
+    def test_player_moves_over_health_pickup_and_health_increases_by_fifty(self):
+        health_pick_up = MagicMock(value = 50)
+        health_pick_up.name= "health"
+        self.world.grid[0][1] = health_pick_up
+        self.world.move_player("d")
+        self.assertEqual(self.world.player.current_health, 150)
 
 
 if __name__ == '__main__':

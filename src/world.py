@@ -31,7 +31,6 @@ class World:
     def __init__(self, size, database):
         self.size = size
         self.grid = [[None for _ in range(size)] for _ in range(size) ]
-        self.player_position = (0, 0)
         self.database = database
         self.player = None
         self.message = ""
@@ -96,7 +95,7 @@ class World:
         print(f"Current health:  {self.player.current_health}")
         self.__store_grid_to_file()
         if self.player is not None:
-            self.database.save_player_data(self.player, self.player_position)
+            self.database.save_player_data(self.player, self.player.player_position)
 
     def __store_grid_to_file(self):
         """
@@ -136,7 +135,7 @@ class World:
                         self.grid[x_position][y_position] = Exit("Goodbye")
                     elif value == "P":
                         self.grid[x_position][y_position] = self.player
-                        self.player_position = (x_position, y_position)
+                        self.player.player_position = (x_position, y_position)
 
     def move_player(self, direction):
         """
@@ -144,7 +143,7 @@ class World:
         :param direction: Direction player moves in.
         """
 
-        x_position, y_position = self.player_position
+        x_position, y_position = self.player.player_position
         if direction in ("w", "up"):
             x_position -= 1
         elif direction in ("s", "down"):
@@ -158,8 +157,8 @@ class World:
 
             self.__determine_collision(x_position, y_position)
 
-            self.grid[self.player_position[0]][self.player_position[1]] = None
-            self.player_position = (x_position, y_position)
+            self.grid[self.player.player_position[0]][self.player.player_position[1]] = None
+            self.player.player_position = (x_position, y_position)
             self.grid[x_position][y_position] = self.player
 
 
@@ -186,6 +185,8 @@ class World:
         cell = self.grid[new_x][new_y]
         if cell is None:
             self.message = "You move into the empty space."
+        elif cell.name == "health":
+            self.player.current_health += cell.value
         elif isinstance(cell, Obstacle):
             self.message = f"You hit a {cell.name} and take {cell.damage} damage!"
             self.player.take_damage(cell.damage)
