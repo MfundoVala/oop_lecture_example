@@ -185,7 +185,7 @@ class World:
         cell = self.grid[new_x][new_y]
         if cell is None:
             self.message = "You move into the empty space."
-        elif cell.name == "health":
+        elif cell.name == "Health":
             self.player.current_health += cell.value
         elif isinstance(cell, Obstacle):
             self.message = f"You hit a {cell.name} and take {cell.damage} damage!"
